@@ -11,8 +11,12 @@ if (!empty($url)) {
     $sslmode = $query['sslmode'] ?? 'require';
     $options = $query['options'] ?? '';
 
+    if (str_contains($host, '.neon.tech')) {
+        $host = str_replace('-pooler', '', $host);
+    }
+
     if (empty($options) && preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $host, $m)) {
-        $options = 'endpoint=' . $m[1];
+        $options = 'endpoint=' . str_replace('-pooler', '', $m[1]);
     }
 
     $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode={$sslmode}";

@@ -130,8 +130,14 @@ return [
                 $parsed = parse_url($url);
                 if (!empty($parsed['host'])) {
                     $host = $parsed['host'];
+                    if (str_contains($host, '.neon.tech')) {
+                        // Neon pooler (-pooler) runs PgBouncer in transaction pooling mode which rejects DEALLOCATE
+                        // and breaks multi-query transactions (like DB::transaction in order creation).
+                        // Stripping '-pooler' connects directly to PostgreSQL with native prepared statement and transaction support.
+                        $host = str_replace('-pooler', '', $host);
+                    }
                     if (preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $host, $matches)) {
-                        $endpointId = $matches[1];
+                        $endpointId = str_replace('-pooler', '', $matches[1]);
                         $host = "{$host};options='endpoint={$endpointId}'";
                         // Set url to null so Laravel doesn't overwrite our custom host string
                         $url = null;

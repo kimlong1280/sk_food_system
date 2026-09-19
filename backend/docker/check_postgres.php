@@ -12,7 +12,7 @@ if (!empty($url)) {
     $options = $query['options'] ?? '';
 
     if (empty($options) && preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $host, $m)) {
-        $options = 'endpoint=' . str_replace('-pooler', '', $m[1]);
+        $options = 'endpoint=' . $m[1];
     }
 
     $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode={$sslmode}";

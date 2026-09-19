@@ -131,7 +131,7 @@ return [
                 if (!empty($parsed['host'])) {
                     $host = $parsed['host'];
                     if (preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $host, $matches)) {
-                        $endpointId = str_replace('-pooler', '', $matches[1]);
+                        $endpointId = $matches[1];
                         $host = "{$host};options='endpoint={$endpointId}'";
                         // Set url to null so Laravel doesn't overwrite our custom host string
                         $url = null;

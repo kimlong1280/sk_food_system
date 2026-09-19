@@ -42,12 +42,12 @@ const MenuCard = ({ item, onSelect, onQuickAdd, priority = false }) => {
   return (
     <div
       onClick={() => onSelect(item, selectedVariant)}
-      className={`group relative bg-white rounded-3xl border border-slate-100/90 shadow-xs hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 overflow-hidden flex flex-row items-stretch cursor-pointer card-shimmer ${
+      className={`group relative bg-white rounded-3xl border border-slate-100/90 shadow-xs hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 p-3 sm:p-4 flex flex-row items-stretch gap-3 sm:gap-4 cursor-pointer card-shimmer ${
         !item.is_available ? 'opacity-70' : 'hover:-translate-y-1'
       }`}
     >
-      {/* Left side: Food Poster/Image */}
-      <div className="relative w-32 min-[400px]:w-36 sm:w-44 md:w-48 shrink-0 overflow-hidden bg-slate-100 self-stretch">
+      {/* Left side: Food Thumbnail/Image */}
+      <div className="relative w-24 min-[400px]:w-28 sm:w-32 md:w-36 aspect-square shrink-0 overflow-hidden rounded-2xl bg-slate-100 border border-slate-100/80 shadow-2xs self-start sm:self-center">
         <img
           src={item.image || DEFAULT_PLACEHOLDER_IMAGE}
           alt={item.name}
@@ -62,28 +62,28 @@ const MenuCard = ({ item, onSelect, onQuickAdd, priority = false }) => {
 
         {/* Featured Tag */}
         {item.is_featured && item.is_available && (
-          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-bold shadow-xs inline-flex items-center gap-1 z-10">
-            <i className="fi fi-sr-star text-[9px] text-amber-200" />
+          <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-bold shadow-xs inline-flex items-center gap-0.5 z-10">
+            <i className="fi fi-sr-star text-[8px] text-amber-200" />
             <span>{t('popularTag')}</span>
           </div>
         )}
 
         {/* Unavailable Overlay */}
         {!item.is_available && (
-          <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-2xs flex items-center justify-center p-2 z-10">
-            <span className="px-2.5 py-1 rounded-full bg-red-600/95 text-white text-[11px] font-bold shadow-md tracking-wide uppercase">
+          <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-2xs flex items-center justify-center p-1 z-10 rounded-2xl">
+            <span className="px-2 py-0.5 rounded-full bg-red-600/95 text-white text-[10px] font-bold shadow-md tracking-wide uppercase">
               {t('soldOut')}
             </span>
           </div>
         )}
 
         {/* Type Badge */}
-        <div className="absolute bottom-2 left-2 flex items-center gap-1 z-10">
-          <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-white text-[10px] font-medium capitalize">
+        <div className="absolute bottom-1.5 left-1.5 flex items-center gap-1 z-10">
+          <span className="px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-white text-[9px] font-medium capitalize">
             {translateType(item.type)}
           </span>
           {hasMultiplePrices && (
-            <span className="hidden min-[400px]:inline-block px-1.5 py-0.5 rounded-md bg-orange-600/80 backdrop-blur-xs text-white text-[9px] font-bold">
+            <span className="hidden min-[400px]:inline-block px-1 py-0.5 rounded-md bg-orange-600/80 backdrop-blur-xs text-white text-[8px] font-bold">
               {item.prices?.length} {t('sizesCount', { count: item.prices?.length || 2 })}
             </span>
           )}
@@ -91,7 +91,7 @@ const MenuCard = ({ item, onSelect, onQuickAdd, priority = false }) => {
       </div>
 
       {/* Right side: Card Content & Details */}
-      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between min-w-0">
+      <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
         <div>
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-extrabold text-sm sm:text-base text-slate-900 group-hover:text-orange-600 transition-colors line-clamp-1">

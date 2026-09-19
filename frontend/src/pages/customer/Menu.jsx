@@ -331,7 +331,7 @@ const Menu = () => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Image */}
-            <div className="relative aspect-16/10 md:aspect-auto md:w-5/12 w-full bg-slate-100 shrink-0">
+            <div className="relative aspect-16/10 md:aspect-auto md:w-5/12 w-full bg-slate-100 shrink-0 overflow-hidden">
               <img
                 src={selectedItem.image || DEFAULT_PLACEHOLDER_IMAGE}
                 alt={selectedItem.name}

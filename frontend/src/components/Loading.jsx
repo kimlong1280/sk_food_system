@@ -36,8 +36,8 @@ export const PageLoading = ({ text = 'Loading delicious menu...' }) => {
 export const SkeletonCard = () => {
   return (
     <div className="bg-white rounded-3xl p-3 sm:p-4 shadow-xs border border-slate-100 animate-pulse flex flex-row items-stretch gap-3 sm:gap-4 min-h-[135px]">
-      <div className="w-28 sm:w-36 md:w-40 aspect-square sm:aspect-auto bg-slate-200 rounded-2xl shrink-0"></div>
-      <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
+      <div className="w-24 min-[400px]:w-28 sm:w-32 md:w-36 aspect-square bg-slate-200 rounded-2xl shrink-0 self-start sm:self-center"></div>
+      <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0">
         <div>
           <div className="h-4 sm:h-5 bg-slate-200 rounded-md w-3/4 mb-2"></div>
           <div className="h-3 bg-slate-200 rounded-md w-full mb-1.5"></div>

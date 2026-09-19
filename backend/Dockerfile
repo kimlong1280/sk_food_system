@@ -43,6 +43,7 @@ COPY docker/php.ini $PHP_INI_DIR/conf.d/production.ini
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
+COPY docker/check_postgres.php /entrypoint-check-db.php
 RUN chmod +x /entrypoint.sh
 
 # Copy composer files first for layer caching

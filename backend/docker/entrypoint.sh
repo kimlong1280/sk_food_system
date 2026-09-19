@@ -123,37 +123,11 @@ ALLOW_SQLITE_FALLBACK="${ALLOW_SQLITE_FALLBACK:-false}"
 DB_MAX_ATTEMPTS="${DB_MAX_ATTEMPTS:-5}"
 
 check_postgres() {
-    php -r '
-        $url = getenv("DATABASE_URL");
-        if (!empty($url)) {
-            $parsed = parse_url($url);
-            $h = $parsed["host"] ?? "";
-            $port = $parsed["port"] ?? 5432;
-            $u = $parsed["user"] ?? "";
-            $p = $parsed["pass"] ?? "";
-            $d = ltrim($parsed["path"] ?? "", "/");
-            parse_str($parsed["query"] ?? "", $q);
-            $s = $q["sslmode"] ?? "require";
-        } else {
-            $h = getenv("DB_HOST");
-            $u = getenv("DB_USERNAME");
-            $p = getenv("DB_PASSWORD");
-            $d = getenv("DB_DATABASE");
-            $s = getenv("DB_SSLMODE") ?: "prefer";
-            $port = getenv("DB_PORT") ?: 5432;
-        }
-        if (preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $h, $m)) {
-            $ep = str_replace('-pooler', '', $m[1]);
-            $h = "{$h};options=\x27endpoint={$ep}\x27";
-        }
-        try {
-            $pdo = new PDO("pgsql:host={$h};port={$port};dbname={$d};sslmode={$s}", $u, $p, [PDO::ATTR_TIMEOUT => 6]);
-            exit(0);
-        } catch (\Throwable $e) {
-            echo "PostgreSQL connection error: " . $e->getMessage() . "\n";
-            exit(1);
-        }
-    '
+    if [ -f /entrypoint-check-db.php ]; then
+        php /entrypoint-check-db.php
+    elif [ -f /var/www/html/docker/check_postgres.php ]; then
+        php /var/www/html/docker/check_postgres.php
+    fi
 }
 
 if [ "$DB_CONNECTION" = "pgsql" ] || [ -n "$DB_HOST" ] || [ -n "$DATABASE_URL" ]; then

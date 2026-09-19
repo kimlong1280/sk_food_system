@@ -9,6 +9,16 @@ if (!empty($url)) {
     $db   = ltrim(urldecode($parsed['path'] ?? ''), '/');
     parse_str($parsed['query'] ?? '', $query);
     $sslmode = $query['sslmode'] ?? 'require';
+    $options = $query['options'] ?? '';
+
+    if (empty($options) && preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $host, $m)) {
+        $options = 'endpoint=' . str_replace('-pooler', '', $m[1]);
+    }
+
+    $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode={$sslmode}";
+    if (!empty($options)) {
+        $dsn .= ";options='{$options}'";
+    }
 } else {
     $host = getenv('DB_HOST') ?: '127.0.0.1';
     $port = getenv('DB_PORT') ?: 5432;
@@ -16,15 +26,11 @@ if (!empty($url)) {
     $pass = getenv('DB_PASSWORD') ?: '';
     $db   = getenv('DB_DATABASE') ?: 'postgres';
     $sslmode = getenv('DB_SSLMODE') ?: 'prefer';
-}
-
-if (preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $host, $m)) {
-    $ep = str_replace('-pooler', '', $m[1]);
-    $host = "{$host};options=endpoint={$ep}";
+    $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode={$sslmode}";
 }
 
 try {
-    $pdo = new PDO("pgsql:host={$host};port={$port};dbname={$db};sslmode={$sslmode}", $user, $pass, [
+    $pdo = new PDO($dsn, $user, $pass, [
         PDO::ATTR_TIMEOUT => 6,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);

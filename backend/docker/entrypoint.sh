@@ -142,6 +142,10 @@ check_postgres() {
             $s = getenv("DB_SSLMODE") ?: "prefer";
             $port = getenv("DB_PORT") ?: 5432;
         }
+        if (preg_match('/^([a-z0-9-]+)\.([a-z0-9.-]+\.neon\.tech)$/i', $h, $m)) {
+            $ep = str_replace('-pooler', '', $m[1]);
+            $h = "{$h};options=\x27endpoint={$ep}\x27";
+        }
         try {
             $pdo = new PDO("pgsql:host={$h};port={$port};dbname={$d};sslmode={$s}", $u, $p, [PDO::ATTR_TIMEOUT => 6]);
             exit(0);

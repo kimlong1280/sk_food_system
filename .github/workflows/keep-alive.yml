@@ -2,21 +2,23 @@ name: Keep Backend Alive
 
 on:
   schedule:
-    # Run every 10 minutes (cron format: minute hour day month day-of-week)
+    # Ping every 10 minutes to prevent Render free tier cold starts
     - cron: '*/10 * * * *'
-  workflow_dispatch:
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   ping:
-    name: Ping Render Health Check
+    name: Ping Render Backend
     runs-on: ubuntu-latest
     steps:
-      - name: Send keep-alive HTTP GET
-        env:
-          TARGET_URL: ${{ secrets.BACKEND_HEALTH_URL }}
+      - name: Wake up backend
         run: |
-          if [ -n "$TARGET_URL" ]; then
-            curl -s -f -m 30 "$TARGET_URL" || echo "Ping request completed"
+          BACKEND_URL="https://food-system-backend-i3uc.onrender.com/api/health"
+          echo "Pinging: $BACKEND_URL"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -m 45 "$BACKEND_URL")
+          echo "HTTP Status: $RESPONSE"
+          if [ "$RESPONSE" = "200" ]; then
+            echo "✅ Backend is awake and healthy!"
           else
-            echo "No BACKEND_HEALTH_URL secret set; skipping ping."
+            echo "⚠️ Got status $RESPONSE — backend may still be waking up"
           fi

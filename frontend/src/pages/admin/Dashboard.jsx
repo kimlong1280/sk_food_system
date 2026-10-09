@@ -679,7 +679,7 @@ const Dashboard = () => {
                         {entry.item.name}
                       </p>
                       <p className="text-[11px] text-orange-600 font-bold">
-                        {entry.item.formatted_price}
+                        {entry.item.formatted_price_khr}
                       </p>
                     </div>
                     <div className="text-right shrink-0">

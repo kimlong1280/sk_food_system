@@ -451,9 +451,9 @@ const MenuItems = () => {
 
                     <div className="mt-2 flex flex-wrap items-baseline gap-1.5">
                       <span className="font-black text-orange-600 text-sm">
-                        {item.has_multiple_prices && item.formatted_price_range
-                          ? item.formatted_price_range
-                          : item.formatted_price}
+                        {item.has_multiple_prices && item.formatted_price_range_khr
+                          ? item.formatted_price_range_khr
+                          : item.formatted_price_khr}
                       </span>
                     </div>
                     {item.has_multiple_prices && item.prices && item.prices.length > 0 && (
@@ -582,9 +582,9 @@ const MenuItems = () => {
                     </td>
                     <td className="py-3 px-4">
                       <div className="font-black text-orange-600 text-sm">
-                        {item.has_multiple_prices && item.formatted_price_range
-                          ? item.formatted_price_range
-                          : item.formatted_price}
+                        {item.has_multiple_prices && item.formatted_price_range_khr
+                          ? item.formatted_price_range_khr
+                          : item.formatted_price_khr}
                       </div>
                       {item.has_multiple_prices && item.prices && item.prices.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1.5 max-w-xs">

@@ -106,7 +106,7 @@ const Cart = () => {
             </h3>
             <div className="flex justify-between text-xs text-slate-600">
               <span>{t('subtotal')}</span>
-              <span className="font-semibold text-slate-900">${cartSubtotal.toFixed(2)}</span>
+              <span className="font-semibold text-slate-900">{cartSubtotal.toLocaleString()} ៛</span>
             </div>
             <div className="flex justify-between text-xs text-slate-600">
               <span>{t('taxesAndService')}</span>
@@ -114,7 +114,7 @@ const Cart = () => {
             </div>
             <div className="pt-3 border-t border-slate-100 flex justify-between text-lg font-black text-slate-900">
               <span>{t('totalAmount')}</span>
-              <span className="text-orange-600">${cartSubtotal.toFixed(2)}</span>
+              <span className="text-orange-600">{cartSubtotal.toLocaleString()} ៛</span>
             </div>
           </div>
 
@@ -129,7 +129,7 @@ const Cart = () => {
                 <span>{t('reviewAndPlaceOrder')}</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span>${cartSubtotal.toFixed(2)}</span>
+                <span>{cartSubtotal.toLocaleString()} ៛</span>
                 <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1.5" />
               </div>
             </button>

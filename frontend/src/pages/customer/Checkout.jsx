@@ -308,7 +308,7 @@ const Checkout = () => {
                     )}
                   </div>
                   <span className="font-bold text-slate-900">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {(item.price * item.quantity).toLocaleString()} ៛
                   </span>
                 </div>
               ))}
@@ -317,11 +317,11 @@ const Checkout = () => {
             <div className="pt-3 border-t border-slate-200 space-y-1.5">
               <div className="flex justify-between text-xs text-slate-600">
                 <span>{t('subtotal')}</span>
-                <span className="font-semibold text-slate-900">${cartSubtotal.toFixed(2)}</span>
+                <span className="font-semibold text-slate-900">{cartSubtotal.toLocaleString()} ៛</span>
               </div>
               <div className="flex justify-between text-base font-black text-slate-900 pt-1 border-t border-slate-100">
                 <span>{t('totalAmount')}</span>
-                <span className="text-orange-600">${cartSubtotal.toFixed(2)}</span>
+                <span className="text-orange-600">{cartSubtotal.toLocaleString()} ៛</span>
               </div>
             </div>
           </div>
@@ -352,7 +352,7 @@ const Checkout = () => {
               ) : (
                 <>
                   <FiCheckCircle className="w-5 h-5" />
-                  <span>{t('placeOrder', { amount: cartSubtotal.toFixed(2) })}</span>
+                  <span>{t('placeOrder', { amount: cartSubtotal.toLocaleString() + ' ៛' })}</span>
                 </>
               )}
             </button>

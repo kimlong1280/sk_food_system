@@ -69,16 +69,12 @@ const MenuItems = () => {
     fetchData()
   }, [])
 
-  const KHR_RATE = 4000
-  const [priceCurrency, setPriceCurrency] = useState('USD') // 'USD' | 'KHR'
-  const [khrPrice, setKhrPrice] = useState('')
-
   // Multi-price state
   const [pricingMode, setPricingMode] = useState('single') // 'single' | 'multiple'
   const [priceVariants, setPriceVariants] = useState([
-    { name: 'Small', price: '', khrPrice: '', is_default: true },
-    { name: 'Medium', price: '', khrPrice: '', is_default: false },
-    { name: 'Large', price: '', khrPrice: '', is_default: false },
+    { name: 'Small', price: '', is_default: true },
+    { name: 'Medium', price: '', is_default: false },
+    { name: 'Large', price: '', is_default: false },
   ])
 
   const handleOpenModal = (item = null) => {
@@ -94,9 +90,6 @@ const MenuItems = () => {
         is_available: item.is_available,
         is_featured: item.is_featured,
       })
-      setPriceCurrency('USD')
-      setKhrPrice(Math.round(Number(item.price) * KHR_RATE).toString())
-
       if (item.prices && item.prices.length > 0) {
         setPricingMode('multiple')
         setPriceVariants(
@@ -104,16 +97,15 @@ const MenuItems = () => {
             id: p.id,
             name: p.name,
             price: p.price.toString(),
-            khrPrice: Math.round(Number(p.price) * KHR_RATE).toString(),
             is_default: !!p.is_default,
           }))
         )
       } else {
         setPricingMode('single')
         setPriceVariants([
-          { name: 'Normal', price: '3.00', khrPrice: '12000', is_default: true },
-          { name: 'Special', price: '5.00', khrPrice: '20000', is_default: false },
-          { name: 'Very Special', price: '7.00', khrPrice: '28000', is_default: false },
+          { name: 'Normal', price: '12000', is_default: true },
+          { name: 'Special', price: '20000', is_default: false },
+          { name: 'Very Special', price: '28000', is_default: false },
         ])
       }
     } else {
@@ -128,54 +120,26 @@ const MenuItems = () => {
         is_available: true,
         is_featured: false,
       })
-      setPriceCurrency('USD')
-      setKhrPrice('')
       setPricingMode('single')
       setPriceVariants([
-        { name: 'Normal', price: '3.00', khrPrice: '12000', is_default: true },
-        { name: 'Special', price: '5.00', khrPrice: '20000', is_default: false },
-        { name: 'Very Special', price: '7.00', khrPrice: '28000', is_default: false },
+        { name: 'Normal', price: '12000', is_default: true },
+        { name: 'Special', price: '20000', is_default: false },
+        { name: 'Very Special', price: '28000', is_default: false },
       ])
     }
     setImageFile(null)
     setIsModalOpen(true)
   }
 
-  const handleUsdChange = (val) => {
-    setFormData((prev) => ({ ...prev, price: val }))
-    if (val && !isNaN(val)) {
-      setKhrPrice(Math.round(Number(val) * KHR_RATE).toString())
-    } else {
-      setKhrPrice('')
-    }
-  }
-
-  const handleKhrChange = (val) => {
-    setKhrPrice(val)
-    if (val && !isNaN(val)) {
-      setFormData((prev) => ({ ...prev, price: (Number(val) / KHR_RATE).toFixed(2) }))
-    } else {
-      setFormData((prev) => ({ ...prev, price: '' }))
-    }
-  }
-
   // Add a new price variant row
-  const handleAddPriceVariant = (presetName = '', presetKhr = '', presetUsd = '') => {
-    let khr = presetKhr ? presetKhr.toString() : ''
-    let usd = presetUsd ? presetUsd.toString() : ''
-    if (khr && !usd) {
-      usd = (Number(khr) / KHR_RATE).toFixed(2)
-    } else if (usd && !khr) {
-      khr = Math.round(Number(usd) * KHR_RATE).toString()
-    }
-    const name = presetName || (khr ? `${Number(khr).toLocaleString()} ៛` : '')
+  const handleAddPriceVariant = (presetName = '', presetPrice = '') => {
+    const name = presetName || (presetPrice ? `${Number(presetPrice).toLocaleString()} ៛` : '')
 
     setPriceVariants((prev) => [
       ...prev,
       {
         name: name,
-        price: usd,
-        khrPrice: khr,
+        price: presetPrice ? presetPrice.toString() : '',
         is_default: prev.length === 0,
       },
     ])
@@ -196,19 +160,7 @@ const MenuItems = () => {
   const handleVariantChange = (index, field, val) => {
     setPriceVariants((prev) => {
       const updated = [...prev]
-      if (field === 'price') {
-        updated[index] = {
-          ...updated[index],
-          price: val,
-          khrPrice: val && !isNaN(val) ? Math.round(Number(val) * KHR_RATE).toString() : '',
-        }
-      } else if (field === 'khrPrice') {
-        updated[index] = {
-          ...updated[index],
-          khrPrice: val,
-          price: val && !isNaN(val) ? (Number(val) / KHR_RATE).toFixed(2) : '',
-        }
-      } else if (field === 'is_default') {
+      if (field === 'is_default') {
         return updated.map((v, i) => ({ ...v, is_default: i === index }))
       } else {
         updated[index] = { ...updated[index], [field]: val }
@@ -231,26 +183,22 @@ const MenuItems = () => {
       data.append('is_featured', formData.is_featured ? 1 : 0)
 
       if (pricingMode === 'multiple') {
-        const validVariants = priceVariants.filter((v) => Number(v.price) > 0 || Number(v.khrPrice) > 0)
+        const validVariants = priceVariants.filter((v) => Number(v.price) > 0)
         if (validVariants.length === 0) {
           toast.error(t('selectSizePrompt') || 'Please add at least one valid price.')
           setSubmitting(false)
           return
         }
         const formattedPrices = validVariants.map((v, idx) => {
-          let usd = v.price && !isNaN(v.price) ? parseFloat(v.price) : 0
-          if (usd <= 0 && v.khrPrice && !isNaN(v.khrPrice)) {
-            usd = parseFloat((Number(v.khrPrice) / KHR_RATE).toFixed(2))
-          }
+          let priceAmt = v.price && !isNaN(v.price) ? parseFloat(v.price) : 0
           let name = v.name ? v.name.trim() : ''
           if (!name) {
-            const khrAmt = v.khrPrice ? Number(v.khrPrice) : Math.round(usd * KHR_RATE)
-            name = `${khrAmt.toLocaleString()} ៛`
+            name = `${priceAmt.toLocaleString()} ៛`
           }
           return {
             id: v.id || undefined,
             name: name,
-            price: usd,
+            price: priceAmt,
             is_default: !!v.is_default,
             sort_order: idx,
           }
@@ -507,17 +455,12 @@ const MenuItems = () => {
                           ? item.formatted_price_range
                           : item.formatted_price}
                       </span>
-                      <span className="font-bold text-slate-400 text-xs">
-                        {item.has_multiple_prices && item.formatted_price_range_khr
-                          ? `(${item.formatted_price_range_khr})`
-                          : `(${item.formatted_price_khr || `${(parseFloat(item.price) * 4000).toLocaleString()} ៛`})`}
-                      </span>
                     </div>
                     {item.has_multiple_prices && item.prices && item.prices.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1.5">
                         {item.prices.map((p) => (
                           <span key={p.id} className="text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200/80 px-1.5 py-0.5 rounded-md">
-                            {p.name}: ${parseFloat(p.price).toFixed(2)}
+                            {p.name}: {parseFloat(p.price).toLocaleString()} ៛
                           </span>
                         ))}
                       </div>
@@ -603,7 +546,7 @@ const MenuItems = () => {
                 <th className="py-3.5 px-4 font-bold">{t('itemImageLabel')}</th>
                 <th className="py-3.5 px-4 font-bold">{t('itemNameLabel')}</th>
                 <th className="py-3.5 px-4 font-bold">{t('itemCategoryLabel')}</th>
-                <th className="py-3.5 px-4 font-bold">{t('itemPriceLabel')} (USD / KHR)</th>
+                <th className="py-3.5 px-4 font-bold">{t('itemPriceLabel')}</th>
                 <th className="py-3.5 px-4 font-bold">{t('itemTypeLabel')}</th>
                 <th className="py-3.5 px-4 font-bold text-center">{t('featured')}</th>
                 <th className="py-3.5 px-4 font-bold text-center">{t('itemAvailableLabel')}</th>
@@ -643,16 +586,11 @@ const MenuItems = () => {
                           ? item.formatted_price_range
                           : item.formatted_price}
                       </div>
-                      <div className="text-[11px] font-bold text-slate-500">
-                        {item.has_multiple_prices && item.formatted_price_range_khr
-                          ? item.formatted_price_range_khr
-                          : item.formatted_price_khr || `${(parseFloat(item.price) * 4000).toLocaleString()} ៛`}
-                      </div>
                       {item.has_multiple_prices && item.prices && item.prices.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1.5 max-w-xs">
                           {item.prices.map((p) => (
                             <span key={p.id} className="text-[10px] font-bold bg-orange-50 text-orange-700 border border-orange-200/80 px-1.5 py-0.5 rounded-md">
-                              {p.name}: ${parseFloat(p.price).toFixed(2)}
+                              {p.name}: {parseFloat(p.price).toLocaleString()} ៛
                             </span>
                           ))}
                         </div>
@@ -842,117 +780,44 @@ const MenuItems = () => {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
-                  {priceCurrency === 'USD' ? `${t('itemPriceLabel')} *` : `${t('itemPriceLabel')} (KHR ៛) *`}
+                  {t('itemPriceLabel')} (៛) *
                 </label>
-
-                {/* Currency Selector Toggle */}
-                <div className="flex bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-[11px] font-bold">
-                  <button
-                    type="button"
-                    onClick={() => setPriceCurrency('USD')}
-                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                      priceCurrency === 'USD'
-                        ? 'bg-white text-orange-600 shadow-2xs font-extrabold'
-                        : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    💵 USD ($)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPriceCurrency('KHR')
-                      if (!khrPrice && formData.price) {
-                        setKhrPrice(Math.round(Number(formData.price) * KHR_RATE).toString())
-                      }
-                    }}
-                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                      priceCurrency === 'KHR'
-                        ? 'bg-white text-orange-600 shadow-2xs font-extrabold'
-                        : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    🇰🇭 KHR (៛)
-                  </button>
-                </div>
               </div>
 
-              {priceCurrency === 'USD' ? (
-                <div className="relative">
-                  <span className="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0.01"
-                    required={pricingMode === 'single'}
-                    value={formData.price}
-                    onChange={(e) => handleUsdChange(e.target.value)}
-                    placeholder="2.50"
-                    className="w-full pl-8 pr-3 py-2.5 border border-slate-200 rounded-2xl focus:outline-hidden focus:border-orange-500 text-sm font-bold shadow-2xs"
-                  />
-                </div>
-              ) : (
-                <div className="relative">
-                  <input
-                    type="number"
-                    step="100"
-                    min="100"
-                    required={pricingMode === 'single'}
-                    value={khrPrice}
-                    onChange={(e) => handleKhrChange(e.target.value)}
-                    placeholder="10000"
-                    className="w-full pl-3.5 pr-8 py-2.5 border border-slate-200 rounded-2xl focus:outline-hidden focus:border-orange-500 text-sm font-bold shadow-2xs"
-                  />
-                  <span className="absolute right-3.5 top-2.5 text-slate-400 font-bold">៛</span>
-                </div>
-              )}
-
-              {/* Quick KHR Presets */}
-              {priceCurrency === 'KHR' && (
-                <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
-                  <span className="text-[10px] text-slate-400 font-semibold mr-0.5">{t('quickKhr')}:</span>
-                  {[4000, 6000, 8000, 10000, 12000, 15000, 20000].map((amt) => (
-                    <button
-                      key={amt}
-                      type="button"
-                      onClick={() => handleKhrChange(amt.toString())}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-                        khrPrice === amt.toString()
-                          ? 'bg-orange-600 text-white shadow-xs'
-                          : 'bg-slate-100 text-slate-600 hover:bg-orange-50 hover:text-orange-600'
-                      }`}
-                    >
-                      {amt.toLocaleString()}៛
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Live Conversion Preview */}
-              <div className="mt-2 flex items-center justify-between text-[11px] p-2.5 bg-orange-50/70 border border-orange-100 rounded-2xl text-orange-900">
-                <span className="font-medium">
-                  {priceCurrency === 'USD' ? (
-                    <>
-                      {t('equivalentKhr')}{' '}
-                      <strong className="font-extrabold text-orange-900">
-                        {formData.price && !isNaN(formData.price)
-                          ? `${Math.round(Number(formData.price) * KHR_RATE).toLocaleString()} ៛`
-                          : '0 ៛'}
-                      </strong>
-                    </>
-                  ) : (
-                    <>
-                      {t('equivalentUsd')}{' '}
-                      <strong className="font-extrabold text-orange-900">
-                        {khrPrice && !isNaN(khrPrice)
-                          ? `$${(Number(khrPrice) / KHR_RATE).toFixed(2)} USD`
-                          : '$0.00 USD'}
-                      </strong>
-                    </>
-                  )}
-                </span>
-                <span className="text-[10px] text-orange-600/80 font-bold">{t('exchangeRateNote')}</span>
+              <div className="relative">
+                <input
+                  type="number"
+                  step="100"
+                  min="100"
+                  required={pricingMode === 'single'}
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  placeholder="10000"
+                  className="w-full pl-3.5 pr-8 py-2.5 border border-slate-200 rounded-2xl focus:outline-hidden focus:border-orange-500 text-sm font-bold shadow-2xs"
+                />
+                <span className="absolute right-3.5 top-2.5 text-slate-400 font-bold">៛</span>
               </div>
+
+              {/* Quick Presets */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                <span className="text-[10px] text-slate-400 font-semibold mr-0.5">{t('quickKhr')}:</span>
+                {[4000, 6000, 8000, 10000, 12000, 15000, 20000].map((amt) => (
+                  <button
+                    key={amt}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, price: amt.toString() })}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                      formData.price === amt.toString()
+                        ? 'bg-orange-600 text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-orange-50 hover:text-orange-600'
+                    }`}
+                  >
+                    {amt.toLocaleString()}៛
+                  </button>
+                ))}
+              </div>
+
+
             </div>
           ) : (
             /* MULTIPLE PRICES / SIZES / PORTIONS MANAGER */
@@ -976,22 +841,20 @@ const MenuItems = () => {
                   </span>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {[
-                      { label: 'Normal ($3)', name: 'Normal', usd: '3.00', khr: 12000 },
-                      { label: 'Special ($5)', name: 'Special', usd: '5.00', khr: 20000 },
-                      { label: 'Very Special ($7)', name: 'Very Special', usd: '7.00', khr: 28000 },
-                      { label: 'Small ($2.50)', name: 'Small', usd: '2.50', khr: 10000 },
-                      { label: 'Medium ($4.00)', name: 'Medium', usd: '4.00', khr: 16000 },
-                      { label: 'Large ($6.00)', name: 'Large', usd: '6.00', khr: 24000 },
-                      { label: '10,000 ៛', name: '10,000 ៛', usd: '2.50', khr: 10000 },
-                      { label: '15,000 ៛', name: '15,000 ៛', usd: '3.75', khr: 15000 },
+                      { label: 'Normal', name: 'Normal', khr: 12000 },
+                      { label: 'Special', name: 'Special', khr: 20000 },
+                      { label: 'Very Special', name: 'Very Special', khr: 28000 },
+                      { label: 'Small', name: 'Small', khr: 10000 },
+                      { label: 'Medium', name: 'Medium', khr: 16000 },
+                      { label: 'Large', name: 'Large', khr: 24000 },
                     ].map((preset) => (
                       <button
                         key={preset.label}
                         type="button"
-                        onClick={() => handleAddPriceVariant(preset.name, preset.khr, preset.usd)}
+                        onClick={() => handleAddPriceVariant(preset.name, preset.khr)}
                         className="px-2.5 py-1 rounded-xl bg-white border border-slate-200 hover:border-orange-400 hover:bg-orange-50 text-[11px] font-bold text-slate-700 hover:text-orange-600 transition-all cursor-pointer shadow-2xs active:scale-95"
                       >
-                        + {preset.label}
+                        + {preset.label} ({preset.khr.toLocaleString()}៛)
                       </button>
                     ))}
                   </div>
@@ -1039,7 +902,7 @@ const MenuItems = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
                       {/* Option Name Input (e.g. Normal, Special, Very Special) */}
-                      <div className="sm:col-span-5">
+                      <div className="sm:col-span-6">
                         <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                           {t('optionNameLabel')} (e.g. Normal, Special)
                         </label>
@@ -1053,42 +916,23 @@ const MenuItems = () => {
                         />
                       </div>
 
-                      {/* USD Price Input ($) */}
-                      <div className="sm:col-span-4">
+                      {/* Price Input (KHR) */}
+                      <div className="sm:col-span-6">
                         <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-                          Price ($ USD) *
-                        </label>
-                        <div className="relative">
-                          <span className="absolute left-2.5 top-2 text-slate-400 font-bold text-xs">$</span>
-                          <input
-                            type="number"
-                            step="0.01"
-                            min="0.01"
-                            required
-                            value={variant.price}
-                            onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
-                            placeholder="3.00"
-                            className="w-full pl-6 pr-2 py-2 text-xs border border-slate-200 rounded-xl focus:outline-hidden focus:border-orange-500 font-black text-slate-900 bg-white"
-                          />
-                        </div>
-                      </div>
-
-                      {/* KHR Price (Auto-synced) */}
-                      <div className="sm:col-span-3">
-                        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-                          KHR (៛)
+                          Price (៛) *
                         </label>
                         <div className="relative">
                           <input
                             type="number"
                             step="100"
                             min="100"
-                            value={variant.khrPrice}
-                            onChange={(e) => handleVariantChange(index, 'khrPrice', e.target.value)}
+                            required
+                            value={variant.price}
+                            onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
                             placeholder="12000"
-                            className="w-full pl-2.5 pr-6 py-2 text-xs border border-slate-200 rounded-xl focus:outline-hidden focus:border-orange-500 font-bold text-slate-600 bg-white"
+                            className="w-full pl-3 pr-8 py-2 text-xs border border-slate-200 rounded-xl focus:outline-hidden focus:border-orange-500 font-black text-slate-900 bg-white"
                           />
-                          <span className="absolute right-2.5 top-2 text-slate-400 font-bold text-xs">៛</span>
+                          <span className="absolute right-3 top-2 text-slate-400 font-bold text-xs">៛</span>
                         </div>
                       </div>
                     </div>

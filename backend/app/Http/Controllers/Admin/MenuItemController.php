@@ -62,18 +62,13 @@ class MenuItemController extends Controller
         if (is_array($pricesInput) && count($pricesInput) > 0) {
             foreach ($pricesInput as $idx => $p) {
                 $rawPrice = (float) ($p['price'] ?? 0);
-                if (isset($p['currency']) && strtoupper($p['currency']) === 'KHR') {
-                    $rawPrice = round($rawPrice / 4000, 2);
-                } elseif ($rawPrice > 500) {
-                    $rawPrice = round($rawPrice / 4000, 2);
-                }
-                if ($rawPrice < 0.01) {
-                    $rawPrice = 0.01;
+                if ($rawPrice < 0) {
+                    $rawPrice = 0;
                 }
 
                 $name = trim($p['name'] ?? '');
                 if ($name === '') {
-                    $khrFormatted = number_format(round($rawPrice * 4000));
+                    $khrFormatted = number_format($rawPrice);
                     $name = "{$khrFormatted} ៛";
                 }
 
@@ -96,13 +91,8 @@ class MenuItemController extends Controller
             $data['price'] = $defaultOption ? $defaultOption['price'] : collect($processedPrices)->min('price');
         } else {
             // Single price handling
-            if (isset($data['currency']) && strtoupper($data['currency']) === 'KHR') {
-                $data['price'] = round((float) $data['price'] / 4000, 2);
-            } elseif (isset($data['price']) && (float) $data['price'] > 500) {
-                $data['price'] = round((float) $data['price'] / 4000, 2);
-            }
-            if (isset($data['price']) && $data['price'] < 0.01) {
-                $data['price'] = 0.01;
+            if (isset($data['price']) && $data['price'] < 0) {
+                $data['price'] = 0;
             }
         }
         unset($data['currency']);
@@ -151,18 +141,13 @@ class MenuItemController extends Controller
         if ($hasPricesKey && is_array($pricesInput) && count($pricesInput) > 0) {
             foreach ($pricesInput as $idx => $p) {
                 $rawPrice = (float) ($p['price'] ?? 0);
-                if (isset($p['currency']) && strtoupper($p['currency']) === 'KHR') {
-                    $rawPrice = round($rawPrice / 4000, 2);
-                } elseif ($rawPrice > 500) {
-                    $rawPrice = round($rawPrice / 4000, 2);
-                }
-                if ($rawPrice < 0.01) {
-                    $rawPrice = 0.01;
+                if ($rawPrice < 0) {
+                    $rawPrice = 0;
                 }
 
                 $name = trim($p['name'] ?? '');
                 if ($name === '') {
-                    $khrFormatted = number_format(round($rawPrice * 4000));
+                    $khrFormatted = number_format($rawPrice);
                     $name = "{$khrFormatted} ៛";
                 }
 
@@ -183,13 +168,8 @@ class MenuItemController extends Controller
             $data['price'] = $defaultOption ? $defaultOption['price'] : collect($processedPrices)->min('price');
         } elseif (isset($data['price'])) {
             // Single price update
-            if (isset($data['currency']) && strtoupper($data['currency']) === 'KHR') {
-                $data['price'] = round((float) $data['price'] / 4000, 2);
-            } elseif ((float) $data['price'] > 500) {
-                $data['price'] = round((float) $data['price'] / 4000, 2);
-            }
-            if ($data['price'] < 0.01) {
-                $data['price'] = 0.01;
+            if ($data['price'] < 0) {
+                $data['price'] = 0;
             }
         }
         unset($data['currency']);

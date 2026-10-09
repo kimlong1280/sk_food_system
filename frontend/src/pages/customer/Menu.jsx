@@ -363,10 +363,7 @@ const Menu = () => {
                   </div>
                   <div className="text-right shrink-0">
                     <span className="text-xl font-black text-orange-600 block">
-                      ${(selectedVariant ? parseFloat(selectedVariant.price) : parseFloat(selectedItem.price)).toFixed(2)}
-                    </span>
-                    <span className="text-[11px] font-bold text-slate-400 block">
-                      {(Math.round((selectedVariant ? parseFloat(selectedVariant.price) : parseFloat(selectedItem.price)) * 4000)).toLocaleString()} ៛
+                      {(selectedVariant ? parseFloat(selectedVariant.price) : parseFloat(selectedItem.price)).toLocaleString()} ៛
                     </span>
                   </div>
                 </div>
@@ -408,10 +405,7 @@ const Menu = () => {
                             </div>
                             <div className="mt-1 flex items-baseline gap-1.5">
                               <span className={`text-base font-black ${isSelected ? 'text-orange-600' : 'text-slate-900'}`}>
-                                ${parseFloat(p.price).toFixed(2)}
-                              </span>
-                              <span className="text-xs font-bold text-slate-400">
-                                ({(Math.round(parseFloat(p.price) * 4000)).toLocaleString()} ៛)
+                                {parseFloat(p.price).toLocaleString()} ៛
                               </span>
                             </div>
                           </button>
@@ -464,7 +458,7 @@ const Menu = () => {
                   className="flex-1 py-3 px-5 rounded-full bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold text-sm shadow-md shadow-orange-500/25 hover:shadow-lg active:scale-98 disabled:opacity-50 transition-all flex items-center justify-between cursor-pointer"
                 >
                   <span>{t('addToOrder')}</span>
-                  <span>${(((selectedVariant ? parseFloat(selectedVariant.price) : parseFloat(selectedItem.price))) * modalQuantity).toFixed(2)}</span>
+                  <span>{(((selectedVariant ? parseFloat(selectedVariant.price) : parseFloat(selectedItem.price))) * modalQuantity).toLocaleString()} ៛</span>
                 </button>
               </div>
             </div>

@@ -14,9 +14,8 @@ class MenuItemPriceResource extends JsonResource
             'menu_item_id' => $this->menu_item_id,
             'name' => $this->name,
             'price' => (float) $this->price,
-            'price_khr' => (int) round((float) $this->price * 4000),
-            'formatted_price' => '$' . number_format((float) $this->price, 2),
-            'formatted_price_khr' => number_format(round((float) $this->price * 4000)) . ' ៛',
+            'price_khr' => (int) $this->price,
+            'formatted_price_khr' => number_format((float) $this->price) . ' ៛',
             'is_default' => (bool) $this->is_default,
             'sort_order' => (int) $this->sort_order,
         ];

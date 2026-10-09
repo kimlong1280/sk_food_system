@@ -62,7 +62,7 @@ class TestTelegramNotification extends Command
             $sampleText .= "━━━━━━━━━━━━━━━━━━━━━━\n";
             $sampleText .= "📍 <b>តុ (Table):</b> <b>តុ 01 (ខាងក្នុង)</b>\n";
             $sampleText .= "💰 <b>ទឹកប្រាក់ត្រូវទូទាត់ (Total Due):</b>\n";
-            $sampleText .= "👉 <b>$9.50</b>  •  <b>38,000 ៛</b>\n";
+            $sampleText .= "👉 <b>38,000 ៛</b>\n";
             $sampleText .= "━━━━━━━━━━━━━━━━━━━━━━\n";
             $sampleText .= "👤 <b>អតិថិជន (Customer):</b> ភ្ញៀវសាកល្បង\n";
             $sampleText .= "🧾 <b>វិក្កយបត្រ (Orders):</b> <code>#TEST-0001</code>\n";
@@ -70,9 +70,9 @@ class TestTelegramNotification extends Command
             $sampleText .= "📋 <b>សង្ខេបមុខម្ហូបទាំងអស់ (BILL SUMMARY):</b>\n";
             $sampleText .= "──────────────────────\n";
             $sampleText .= "<b>1. Iced Latte</b>\n";
-            $sampleText .= "   └ <b>2x</b>  •  $5.00 (20,000 ៛)\n";
+            $sampleText .= "   └ <b>2x</b>  •  20,000 ៛\n";
             $sampleText .= "<b>2. Khmer Beef Soup</b>\n";
-            $sampleText .= "   └ <b>1x</b>  •  $4.50 (18,000 ៛)\n";
+            $sampleText .= "   └ <b>1x</b>  •  18,000 ៛\n";
             $sampleText .= "──────────────────────\n";
             $sampleText .= "📦 <b>ចំនួនមុខម្ហូបសរុប (Items):</b> <b>3</b>\n";
             $sampleText .= "━━━━━━━━━━━━━━━━━━━━━━\n";
@@ -100,14 +100,13 @@ class TestTelegramNotification extends Command
             $sampleText .= "📋 <b>មុខម្ហូបដែលបានកុម្ម៉ង់ (ITEMS):</b>\n";
             $sampleText .= "──────────────────────\n";
             $sampleText .= "<b>1. Iced Latte</b>\n";
-            $sampleText .= "   └ <b>2x</b> × $2.50 = <b>$5.00</b> (20,000 ៛)\n";
+            $sampleText .= "   └ <b>2x</b> × 10,000 ៛ = <b>20,000 ៛</b>\n";
             $sampleText .= "<b>2. Khmer Beef Soup</b>\n";
-            $sampleText .= "   └ <b>1x</b> × $4.50 = <b>$4.50</b> (18,000 ៛)\n";
+            $sampleText .= "   └ <b>1x</b> × 18,000 ៛ = <b>18,000 ៛</b>\n";
             $sampleText .= "   └ 📝 <i>ចំណាំ: ផ្អែមតិច</i>\n";
             $sampleText .= "━━━━━━━━━━━━━━━━━━━━━━\n";
             $sampleText .= "📦 <b>ចំនួនសរុប (Total Items):</b> <b>3</b>\n";
-            $sampleText .= "💵 <b>សរុបជាដុល្លារ (Total USD):</b> <b>$9.50</b>\n";
-            $sampleText .= "🇰🇭 <b>សរុបជារៀល (Total KHR):</b> <b>38,000 ៛</b>\n";
+            $sampleText .= "🇰🇭 <b>សរុប (Total KHR):</b> <b>38,000 ៛</b>\n";
             $sampleText .= "──────────────────────\n";
             $sampleText .= "📝 <b>ចំណាំពីអតិថិជន (Order Note):</b>\n";
             $sampleText .= "<i>\"បន្ថែមក្រូចឆ្មារ\"</i>\n";

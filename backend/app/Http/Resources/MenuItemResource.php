@@ -22,11 +22,9 @@ class MenuItemResource extends JsonResource
             : (float) $this->price;
 
         if ($hasMultiplePrices && $minPrice !== $maxPrice) {
-            $formattedPriceRange = '$' . number_format($minPrice, 2) . ' - $' . number_format($maxPrice, 2);
-            $formattedPriceRangeKhr = number_format(round($minPrice * 4000)) . ' ៛ - ' . number_format(round($maxPrice * 4000)) . ' ៛';
+            $formattedPriceRangeKhr = number_format($minPrice) . ' ៛ - ' . number_format($maxPrice) . ' ៛';
         } else {
-            $formattedPriceRange = '$' . number_format((float) $this->price, 2);
-            $formattedPriceRangeKhr = number_format(round((float) $this->price * 4000)) . ' ៛';
+            $formattedPriceRangeKhr = number_format((float) $this->price) . ' ៛';
         }
 
         return [
@@ -36,13 +34,11 @@ class MenuItemResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'price' => (float) $this->price,
-            'price_khr' => (int) round((float) $this->price * 4000),
-            'formatted_price' => '$' . number_format((float) $this->price, 2),
-            'formatted_price_khr' => number_format(round((float) $this->price * 4000)) . ' ៛',
+            'price_khr' => (int) $this->price,
+            'formatted_price_khr' => number_format((float) $this->price) . ' ៛',
             'has_multiple_prices' => $hasMultiplePrices,
             'min_price' => $minPrice,
             'max_price' => $maxPrice,
-            'formatted_price_range' => $formattedPriceRange,
             'formatted_price_range_khr' => $formattedPriceRangeKhr,
             'prices' => MenuItemPriceResource::collection($pricesCollection),
             'image' => ImageStorage::url($this->image),

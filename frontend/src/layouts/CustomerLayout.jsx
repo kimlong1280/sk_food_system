@@ -164,7 +164,7 @@ const CustomerLayout = () => {
               <div>
                 <p className="text-xs text-white/90 font-medium">{t('viewCart')}</p>
                 <p className="text-sm sm:text-base font-extrabold tracking-tight">
-                  ${cartSubtotal.toFixed(2)}
+                  {cartSubtotal.toLocaleString()} ៛
                 </p>
               </div>
             </div>

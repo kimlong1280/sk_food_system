@@ -139,7 +139,7 @@ const MenuCard = ({ item, onSelect, onQuickAdd, priority = false }) => {
                   >
                     <span>{p.name}</span>
                     <span className={`text-[10px] ${isSelected ? 'text-orange-100' : 'text-slate-500'}`}>
-                      ${parseFloat(p.price).toFixed(2)}
+                      {parseFloat(p.price).toLocaleString()} ៛
                     </span>
                   </button>
                 )
@@ -153,13 +153,8 @@ const MenuCard = ({ item, onSelect, onQuickAdd, priority = false }) => {
           <div className="flex flex-col min-w-0">
             <span className="font-extrabold text-sm sm:text-base text-orange-600 leading-tight">
               {hasMultiplePrices && selectedVariant
-                ? `$${parseFloat(selectedVariant.price).toFixed(2)}`
-                : item.formatted_price || `$${parseFloat(item.price).toFixed(2)}`}
-            </span>
-            <span className="text-[10px] font-bold text-slate-400 truncate">
-              {hasMultiplePrices && selectedVariant
-                ? `${(Math.round(parseFloat(selectedVariant.price) * 4000)).toLocaleString()} ៛`
-                : item.formatted_price_khr || `${(parseFloat(item.price) * 4000).toLocaleString()} ៛`}
+                ? `${parseFloat(selectedVariant.price).toLocaleString()} ៛`
+                : item.formatted_price_khr || `${parseFloat(item.price).toLocaleString()} ៛`}
             </span>
           </div>
 

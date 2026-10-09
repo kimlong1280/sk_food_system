@@ -291,12 +291,13 @@ class TelegramNotificationService
             $name = htmlspecialchars(trim($item->item_name), ENT_QUOTES, 'UTF-8');
             $qty = (int) $item->quantity;
             $unitPrice = (float) $item->price;
-            $subtotalUsd = (float) $item->subtotal;
-            $subtotalKhr = number_format(round($subtotalUsd * 4000));
+            $subtotalKhr = (float) $item->subtotal;
+            $formattedSubtotalKhr = number_format($subtotalKhr);
+            $formattedUnitPrice = number_format($unitPrice);
             $totalQty += $qty;
 
             $lines[] = "<b>{$idx}. {$name}</b>";
-            $lines[] = "   Qty: <b>{$qty}</b> x $" . number_format($unitPrice, 2) . " = <b>$" . number_format($subtotalUsd, 2) . "</b> ({$subtotalKhr} KHR)";
+            $lines[] = "   Qty: <b>{$qty}</b> x {$formattedUnitPrice} ៛ = <b>{$formattedSubtotalKhr} ៛</b>";
 
             if (!empty($item->note)) {
                 $itemNote = htmlspecialchars(trim($item->note), ENT_QUOTES, 'UTF-8');
@@ -307,14 +308,11 @@ class TelegramNotificationService
             $idx++;
         }
 
-        $totalUsd = (float) $order->total;
-        $totalKhr = number_format(round($totalUsd * 4000));
-        $formattedTotalUsd = '$' . number_format($totalUsd, 2);
+        $totalKhr = number_format((float) $order->total);
 
         $lines[] = "--------------------------------";
         $lines[] = "<b>Total Items :</b> <b>{$totalQty}</b>";
-        $lines[] = "<b>TOTAL (USD) :</b> <b>{$formattedTotalUsd}</b>";
-        $lines[] = "<b>TOTAL (KHR) :</b> <b>{$totalKhr} KHR</b>";
+        $lines[] = "<b>TOTAL (KHR) :</b> <b>{$totalKhr} ៛</b>";
 
         if (!empty($order->note)) {
             $orderNote = htmlspecialchars(trim($order->note), ENT_QUOTES, 'UTF-8');
@@ -350,8 +348,7 @@ class TelegramNotificationService
 
         $orderNumbers = collect($orders)->pluck('order_number')->filter()->map(fn ($n) => '#' . htmlspecialchars($n, ENT_QUOTES, 'UTF-8'))->implode(', ');
 
-        $totalKhr = number_format(round($totalAmount * 4000)) . ' KHR';
-        $totalUsd = '$' . number_format($totalAmount, 2);
+        $totalKhr = number_format($totalAmount) . ' ៛';
 
         $lines = [];
         $lines[] = "================================";
@@ -360,7 +357,7 @@ class TelegramNotificationService
         $lines[] = "<b>     ( ស្នើសុំទូទាត់ប្រាក់ )</b>";
         $lines[] = "================================";
         $lines[] = "<b>Table       :</b> <b>តុ {$tableNumber}{$tableName}</b>";
-        $lines[] = "<b>TOTAL DUE   :</b> <b>{$totalUsd}</b> / <b>{$totalKhr}</b>";
+        $lines[] = "<b>TOTAL DUE   :</b> <b>{$totalKhr}</b>";
 
         if (!empty($customerName)) {
             $lines[] = "<b>Customer    :</b> " . htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8');
@@ -382,12 +379,11 @@ class TelegramNotificationService
             foreach ($order->orderItems as $item) {
                 $name = htmlspecialchars(trim($item->item_name), ENT_QUOTES, 'UTF-8');
                 $qty = (int) $item->quantity;
-                $subtotalUsd = (float) $item->subtotal;
-                $subtotalKhr = number_format(round($subtotalUsd * 4000)) . ' KHR';
+                $subtotalKhr = number_format((float) $item->subtotal) . ' ៛';
                 $totalQty += $qty;
 
                 $lines[] = "<b>{$idx}. {$name}</b>";
-                $lines[] = "   Qty: <b>{$qty}</b> = $" . number_format($subtotalUsd, 2) . " ({$subtotalKhr})";
+                $lines[] = "   Qty: <b>{$qty}</b> = {$subtotalKhr}";
                 $idx++;
             }
         }
@@ -395,7 +391,7 @@ class TelegramNotificationService
         $lines[] = "";
         $lines[] = "--------------------------------";
         $lines[] = "<b>Total Items :</b> <b>{$totalQty}</b>";
-        $lines[] = "<b>TOTAL DUE   :</b> <b>{$totalUsd}</b> / <b>{$totalKhr}</b>";
+        $lines[] = "<b>TOTAL DUE   :</b> <b>{$totalKhr}</b>";
         $lines[] = "--------------------------------";
 
         if (!empty($handledByInfo)) {

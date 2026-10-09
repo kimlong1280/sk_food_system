@@ -26,12 +26,7 @@ class UpdateMenuItemRequest extends FormRequest
                 $name = trim($p['name'] ?? '');
                 if ($name === '') {
                     $rawPrice = (float) ($p['price'] ?? 0);
-                    if (isset($p['currency']) && strtoupper($p['currency']) === 'KHR') {
-                        $rawPrice = round($rawPrice / 4000, 2);
-                    } elseif ($rawPrice > 500) {
-                        $rawPrice = round($rawPrice / 4000, 2);
-                    }
-                    $khr = number_format(round($rawPrice * 4000));
+                    $khr = number_format($rawPrice);
                     $prices[$i]['name'] = "{$khr} ៛";
                 }
             }
@@ -45,13 +40,13 @@ class UpdateMenuItemRequest extends FormRequest
             'category_id' => 'sometimes|required|exists:categories,id',
             'name' => 'sometimes|required|string|max:150',
             'description' => 'nullable|string|max:2000',
-            'price' => 'nullable|numeric|min:0.01|max:99999999',
-            'currency' => 'nullable|in:USD,KHR',
+            'price' => 'nullable|numeric|min:0|max:99999999',
+            'currency' => 'nullable|string',
             'prices' => 'nullable|array',
             'prices.*.id' => 'nullable|integer',
             'prices.*.name' => 'nullable|string|max:100',
-            'prices.*.price' => 'required_with:prices|numeric|min:0.01|max:99999999',
-            'prices.*.currency' => 'nullable|in:USD,KHR',
+            'prices.*.price' => 'required_with:prices|numeric|min:0|max:99999999',
+            'prices.*.currency' => 'nullable|string',
             'prices.*.is_default' => 'nullable|boolean',
             'prices.*.sort_order' => 'nullable|integer',
             'image' => 'nullable|string|max:2048',

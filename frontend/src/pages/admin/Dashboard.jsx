@@ -4,7 +4,7 @@ import {
   FiShoppingBag,
   FiClock,
   FiCheckCircle,
-  FiDollarSign,
+  FiTrendingUp,
   FiArrowRight,
   FiRefreshCw,
   FiAlertCircle,
@@ -196,13 +196,12 @@ const Dashboard = () => {
 
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4">
-        {/* Today's Revenue with Dual USD & KHR */}
+        {/* Today's Revenue */}
         <StatsCard
           title={t('todayRevenue')}
-          value={data?.formatted_today_revenue || '$0.00'}
-          khrValue={data?.formatted_today_revenue_khr}
-          subtext={`All-time: ${data?.formatted_total_revenue || '$0.00'} (${data?.formatted_total_revenue_khr || '0 ៛'})`}
-          icon={<FiDollarSign />}
+          value={data?.formatted_today_revenue || '0 ៛'}
+          subtext={`All-time: ${data?.formatted_total_revenue || '0 ៛'}`}
+          icon={<FiTrendingUp />}
           color="purple"
         />
 
@@ -384,7 +383,6 @@ const Dashboard = () => {
                     <div className="pt-2 border-t border-slate-200/70 flex items-center justify-between">
                       <div>
                         <span className="font-extrabold text-sm text-slate-900">{order.formatted_total}</span>
-                        <span className="text-[10px] text-orange-600 font-bold ml-1">({order.formatted_total_khr})</span>
                       </div>
 
                       {/* Quick 1-tap Status Advance */}
@@ -448,7 +446,7 @@ const Dashboard = () => {
                 <tr className="border-b border-slate-100 text-slate-400 uppercase tracking-wider text-[10px]">
                   <th className="pb-3 font-extrabold">{t('orderNumberCol')}</th>
                   <th className="pb-3 font-extrabold">{t('tableCol')}</th>
-                  <th className="pb-3 font-extrabold">{t('totalCol')} (USD / KHR)</th>
+                  <th className="pb-3 font-extrabold">{t('totalCol')}</th>
                   <th className="pb-3 font-extrabold">{t('timeCol')}</th>
                   <th className="pb-3 font-extrabold">{t('statusCol')}</th>
                   <th className="pb-3 font-extrabold text-right">{t('actionsCol')}</th>
@@ -487,10 +485,9 @@ const Dashboard = () => {
                           </span>
                         </td>
 
-                        {/* Total in USD and KHR */}
+                        {/* Total */}
                         <td className="py-3">
                           <p className="font-extrabold text-orange-600">{order.formatted_total}</p>
-                          <p className="text-[10px] text-slate-400 font-semibold">{order.formatted_total_khr}</p>
                         </td>
 
                         {/* Time */}
@@ -683,9 +680,6 @@ const Dashboard = () => {
                       </p>
                       <p className="text-[11px] text-orange-600 font-bold">
                         {entry.item.formatted_price}
-                        <span className="text-[10px] text-slate-400 ml-1 font-medium">
-                          ({entry.item.formatted_price_khr})
-                        </span>
                       </p>
                     </div>
                     <div className="text-right shrink-0">
@@ -763,7 +757,7 @@ const Dashboard = () => {
                       )}
                     </div>
                     <span className="font-black text-slate-900">
-                      ${parseFloat(item.subtotal).toFixed(2)}
+                      {parseFloat(item.subtotal).toLocaleString()} ៛
                     </span>
                   </div>
                 ))}
@@ -774,9 +768,6 @@ const Dashboard = () => {
             <div className="pt-3 border-t border-slate-200 flex justify-between items-center">
               <div>
                 <p className="text-[10px] font-extrabold uppercase text-slate-400">{t('totalAmount')}</p>
-                <p className="text-xs font-bold text-slate-500">
-                  {selectedOrder.formatted_total_khr}
-                </p>
               </div>
               <span className="text-2xl font-black text-orange-600">
                 {selectedOrder.formatted_total}

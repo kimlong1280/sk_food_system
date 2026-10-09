@@ -233,7 +233,7 @@ const TableBillModal = ({ isOpen, onClose, table, onBillRequested }) => {
                               )}
                             </div>
                             <span className="font-bold text-slate-900 shrink-0">
-                              ${item.subtotal.toFixed(2)}
+                              {parseFloat(item.subtotal).toLocaleString()} ៛
                             </span>
                           </div>
                         ))}
@@ -242,7 +242,7 @@ const TableBillModal = ({ isOpen, onClose, table, onBillRequested }) => {
                       <div className="pt-1.5 flex justify-between items-center text-xs font-bold border-t border-slate-200/60">
                         <span className="text-slate-500">{t('orderTotal')}</span>
                         <span className="text-slate-900 font-extrabold">
-                          ${parseFloat(order.total).toFixed(2)}
+                          {parseFloat(order.total).toLocaleString()} ៛
                         </span>
                       </div>
                     </div>
@@ -262,7 +262,7 @@ const TableBillModal = ({ isOpen, onClose, table, onBillRequested }) => {
                   {t('totalPaymentDue')}
                 </p>
                 <p className="text-2xl font-black text-orange-600 tracking-tight">
-                  ${totalDue.toFixed(2)}
+                  {totalDue.toLocaleString()} ៛
                 </p>
               </div>
 

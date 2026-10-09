@@ -94,8 +94,7 @@ const FoodDetails = () => {
 
   const hasMultiplePrices = item.has_multiple_prices || (item.prices && item.prices.length > 0)
   const activePrice = selectedVariant ? parseFloat(selectedVariant.price) : parseFloat(item.price)
-  const totalPrice = (activePrice * quantity).toFixed(2)
-  const totalPriceKHR = (Math.round(activePrice * quantity * 4000)).toLocaleString()
+  const totalPriceKHR = (activePrice * quantity).toLocaleString()
 
   const handleAddToCart = () => {
     if (!item.is_available) return
@@ -181,10 +180,7 @@ const FoodDetails = () => {
               </div>
               <div className="text-right shrink-0">
                 <span className="text-2xl sm:text-3xl font-black text-orange-600 block">
-                  ${unitPrice.toFixed(2)}
-                </span>
-                <span className="text-xs sm:text-sm font-bold text-slate-400 block">
-                  {unitPriceKhr.toLocaleString()} ៛
+                  {activePrice.toLocaleString()} ៛
                 </span>
               </div>
             </div>
@@ -226,10 +222,7 @@ const FoodDetails = () => {
                         </div>
                         <div className="mt-1 flex items-baseline gap-1.5">
                           <span className={`text-base font-black ${isSelected ? 'text-orange-600' : 'text-slate-900'}`}>
-                            ${parseFloat(p.price).toFixed(2)}
-                          </span>
-                          <span className="text-xs font-bold text-slate-400">
-                            ({(Math.round(parseFloat(p.price) * 4000)).toLocaleString()} ៛)
+                            {parseFloat(p.price).toLocaleString()} ៛
                           </span>
                         </div>
                       </button>
@@ -283,7 +276,7 @@ const FoodDetails = () => {
                 <FiShoppingBag className="w-4 h-4" />
                 <span>{t('addToOrder')}</span>
               </span>
-              <span>${totalPrice}</span>
+              <span>{totalPriceKHR} ៛</span>
             </button>
           </div>
         </div>

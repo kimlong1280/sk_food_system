@@ -1,7 +1,6 @@
 const StatsCard = ({
   title,
   value,
-  khrValue,
   subtext,
   icon,
   trend,
@@ -59,11 +58,6 @@ const StatsCard = ({
           </div>
           <div className="mt-1.5 flex flex-wrap items-baseline gap-2">
             <h3 className="text-2xl font-black text-slate-900 tracking-tight">{value}</h3>
-            {khrValue && (
-              <span className="text-xs font-black text-orange-600 bg-orange-100/70 px-2 py-0.5 rounded-lg border border-orange-200/60">
-                {khrValue}
-              </span>
-            )}
           </div>
         </div>
 

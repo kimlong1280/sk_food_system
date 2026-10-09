@@ -385,7 +385,7 @@ const Orders = () => {
                           )}
                         </div>
                         <span className="font-extrabold text-slate-900 shrink-0">
-                          ${parseFloat(item.subtotal || item.price * item.quantity).toFixed(2)}
+                          {parseFloat(item.subtotal || item.price * item.quantity).toLocaleString()} ៛
                         </span>
                       </div>
                     ))
@@ -416,9 +416,6 @@ const Orders = () => {
                       <div className="flex items-baseline gap-1.5">
                         <span className="text-lg font-black text-slate-900">
                           {order.formatted_total}
-                        </span>
-                        <span className="text-xs font-extrabold text-orange-600">
-                          ({order.formatted_total_khr})
                         </span>
                       </div>
                     </div>
@@ -584,7 +581,7 @@ const Orders = () => {
                 <th className="py-3.5 px-4 font-bold">{t('tableCol')}</th>
                 <th className="py-3.5 px-4 font-bold">{t('customerCol')}</th>
                 <th className="py-3.5 px-4 font-bold">{t('itemsCol')}</th>
-                <th className="py-3.5 px-4 font-bold">{t('totalCol')} (USD / KHR)</th>
+                <th className="py-3.5 px-4 font-bold">{t('totalCol')}</th>
                 <th className="py-3.5 px-4 font-bold">{t('timeCol')}</th>
                 <th className="py-3.5 px-4 font-bold">{t('statusCol')}</th>
                 <th className="py-3.5 px-4 font-bold text-right">{t('actionsCol')}</th>
@@ -624,7 +621,6 @@ const Orders = () => {
                       </td>
                       <td className="py-3 px-4">
                         <span className="font-black text-slate-900 block">{order.formatted_total}</span>
-                        <span className="text-[10px] text-orange-600 font-bold block">{order.formatted_total_khr}</span>
                       </td>
                       <td className="py-3 px-4 text-slate-500 whitespace-nowrap">
                         {order.formatted_time || order.created_at?.slice(11, 16)}
@@ -794,7 +790,7 @@ const Orders = () => {
                         <span className="text-orange-600 font-black">x{item.quantity}</span>
                       </p>
                       <p className="text-[11px] text-slate-400">
-                        ${parseFloat(item.price).toFixed(2)} each
+                        {parseFloat(item.price).toLocaleString()} ៛ each
                       </p>
                       {item.note && (
                         <p className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md inline-block mt-1 font-medium">
@@ -803,18 +799,17 @@ const Orders = () => {
                       )}
                     </div>
                     <span className="font-black text-slate-900">
-                      ${parseFloat(item.subtotal).toFixed(2)}
+                      {parseFloat(item.subtotal).toLocaleString()} ៛
                     </span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Total Amount (USD & KHR) */}
+            {/* Total Amount */}
             <div className="flex justify-between items-center p-3.5 bg-orange-50/70 rounded-2xl border border-orange-200">
               <div>
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">{t('totalAmount')}</span>
-                <span className="text-xs font-bold text-slate-500">{selectedOrder.formatted_total_khr}</span>
               </div>
               <span className="text-xl font-black text-orange-600">
                 {selectedOrder.formatted_total}

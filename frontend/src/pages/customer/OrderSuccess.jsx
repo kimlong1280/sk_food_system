@@ -319,7 +319,7 @@ const OrderSuccess = () => {
                   )}
                 </div>
                 <span className="font-bold text-slate-900 shrink-0">
-                  ${parseFloat(item.subtotal).toFixed(2)}
+                  {parseFloat(item.subtotal).toLocaleString()} ៛
                 </span>
               </div>
             ))}
@@ -330,7 +330,7 @@ const OrderSuccess = () => {
         <div className="pt-3 border-t border-slate-200 flex justify-between items-center">
           <span className="text-sm font-extrabold text-slate-900">{t('totalPaidDue')}</span>
           <span className="text-xl sm:text-2xl font-black text-orange-600">
-            ${parseFloat(order.total).toFixed(2)}
+            {parseFloat(order.total).toLocaleString()} ៛
           </span>
         </div>
 

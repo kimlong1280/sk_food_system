@@ -14,7 +14,7 @@ const CartItem = ({ item, onUpdateQuantity, onUpdateNote, onRemove }) => {
     setIsEditingNote(false)
   }
 
-  const lineTotal = (item.price * item.quantity).toFixed(2)
+  const lineTotal = (item.price * item.quantity).toLocaleString() + ' ៛'
 
   return (
     <div className="group bg-white rounded-2xl p-3.5 border border-slate-100 hover:border-orange-200/80 shadow-2xs hover:shadow-md transition-all duration-200">
@@ -42,7 +42,7 @@ const CartItem = ({ item, onUpdateQuantity, onUpdateNote, onRemove }) => {
                 </span>
               )}
               <p className="text-xs text-orange-600 font-semibold mt-0.5">
-                ${item.price.toFixed(2)} / {t('each')}
+                {item.price.toLocaleString()} ៛ / {t('each')}
               </p>
             </div>
 
